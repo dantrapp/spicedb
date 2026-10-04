@@ -144,9 +144,35 @@ func (bss BaseSubjectSet[T]) Subtract(toRemove T) {
 // SubtractAll subtracts the other set of subjects from this set of subtracts, modifying this
 // set *in place*.
 func (bss BaseSubjectSet[T]) SubtractAll(other BaseSubjectSet[T]) {
-	for _, otherSubject := range other.AsSlice() {
-		bss.Subtract(otherSubject)
+	subjects := other.AsSlice()
+	wildcard, hasWildcard := bss.wildcard.get()
+	if !hasWildcard || other.wildcard.getOrNil() != nil || len(subjects) < 2 {
+		for _, subject := range subjects {
+			bss.Subtract(subject)
+		}
+		return
 	}
+	// Build the exclusions once instead of copying the growing slice for each subject.
+	existingExclusions := wildcard.GetExcludedSubjects()
+	exclusions := make([]T, 0, len(existingExclusions)+len(subjects))
+	matched := make(map[string]struct{}, len(existingExclusions))
+	for _, exclusion := range existingExclusions {
+		if removing, ok := other.concrete[exclusion.GetSubjectId()]; ok {
+			matched[exclusion.GetSubjectId()] = struct{}{}
+			exclusion = bss.constructor(exclusion.GetSubjectId(), shortcircuitedOr(exclusion.GetCaveatExpression(), removing.GetCaveatExpression()), nil, exclusion, removing)
+		}
+		exclusions = append(exclusions, exclusion)
+	}
+	for _, removing := range subjects {
+		if _, ok := matched[removing.GetSubjectId()]; !ok {
+			exclusions = append(exclusions, removing)
+		}
+		if existing, ok := bss.concrete[removing.GetSubjectId()]; ok {
+			bss.setConcrete(removing.GetSubjectId(), subtractConcreteFromConcrete(existing, removing, bss.constructor))
+		}
+	}
+	updated := bss.constructor(tuple.PublicWildcard, wildcard.GetCaveatExpression(), exclusions, wildcard)
+	bss.wildcard.setOrNil(&updated)
 }
 
 // MustIntersectionDifference performs an intersection between this set and the other set, modifying
