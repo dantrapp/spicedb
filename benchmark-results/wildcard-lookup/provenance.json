@@ -1,0 +1,82 @@
+{
+  "source_revisions": {
+    "upstream": "dbc16016e92987c531658eae0770261c77434adf",
+    "first_patch": "d28fc7d6565f58db594598b8f0a100228183e24e",
+    "final": "cd270368128a0e412cc500d993a41d95643a0ec1",
+    "submitted": "1de38724b0e75e5236a5b526fcab2426e23410d7",
+    "equivalence": "The submitted commit has identical Go source and tests to the measured final commit; it adds a changelog entry and squashes the patch history."
+  },
+  "hardware": "Apple M4, macOS 15.6.1, 16 GiB RAM; shared developer machine, no CPU affinity",
+  "compiler": "go1.26.8 darwin/arm64",
+  "build_flags": [
+    "-tags=memoryprotection",
+    "-ldflags=-checklinkname=0"
+  ],
+  "server": {
+    "implementation": "actual cmd/spicedb serve binary",
+    "GOMAXPROCS": 4,
+    "GOMEMLIMIT": "2GiB",
+    "dispatch_cache": "enabled, 128 MiB",
+    "cluster_dispatch_cache": "enabled, 128 MiB",
+    "connection": "TCP gRPC over loopback, plaintext, bearer token",
+    "telemetry": "disabled",
+    "defaults": "other server settings remain defaults"
+  },
+  "database": {
+    "implementation": "PostgreSQL 16.11 (Homebrew), dedicated local cluster",
+    "shared_buffers": "128MB",
+    "max_connections": 60,
+    "track_commit_timestamp": true,
+    "fsync": "on (default)",
+    "fixture_relationships": 280416,
+    "fixture_documents": 96,
+    "seed_method": "public WriteSchema and WriteRelationships gRPC APIs",
+    "co_location": "same host as server and load generator"
+  },
+  "fixtures": {
+    "direct10": "public user wildcard minus 10 named users",
+    "direct1000": "public wildcard minus 1000 users",
+    "direct5000": "public wildcard minus 5000 users",
+    "chain5000": "public wildcard minus 5000 users, then 10 different users",
+    "group5000": "public wildcard minus a group membership of 5000 users",
+    "concrete": "1000 named members minus 500 named users; no wildcard"
+  },
+  "verification": "Every measured lookup checks exact subject IDs, uniqueness, expected wildcard or explicit subjects, permissionship and absence of unexpected caveat metadata. All 96 fixture documents were also verified separately for each variant.",
+  "fixed_runs": {
+    "file": "measurements.jsonl",
+    "request_pattern": "60 scheduled lookups at 10 per second, four workers, new server process per case, three rotated run orders",
+    "latency": "from scheduled arrival through complete gRPC response receipt; includes client queuing and excludes post-receipt exact-result validation",
+    "churn_consistency": "fully consistent; alternating unrelated permission additions/deletions target 20 writes/second; actual counts recorded",
+    "snapshot_consistency": "exact snapshot at seed revision, no concurrent writes; all 16 fixture documents warmed first",
+    "controls": "fully cached wildcard lookup and a non-wildcard concrete-subject lookup",
+    "run_orders": [
+      [
+        "upstream",
+        "first",
+        "final"
+      ],
+      [
+        "final",
+        "first",
+        "upstream"
+      ],
+      [
+        "first",
+        "upstream",
+        "final"
+      ]
+    ]
+  },
+  "metrics": {
+    "allocation": "difference in server go_memstats_alloc_bytes_total divided by successful lookups, includes concurrent writes and small metrics/background overhead",
+    "cpu": "difference in server process_cpu_seconds_total divided by successful lookups, includes writes and background work",
+    "cache_hits": "server dispatch lookup_subjects_from_cache_total / lookup_subjects_total; includes recursive calls",
+    "percentiles": "p95 per run, summarized as median and range across three runs; only 60 requests per fixed-rate run"
+  },
+  "limits": [
+    "synthetic input graphs, not customer traces",
+    "single server and single local PostgreSQL instance; no multi-node dispatch or remote-network latency",
+    "shared host; absolute latency and small differences vary",
+    "demonstrates the specified wildcard exclusion workload, not fleet-wide performance or billing savings"
+  ]
+}

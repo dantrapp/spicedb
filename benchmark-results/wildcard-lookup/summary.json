@@ -1,0 +1,341 @@
+{
+  "source": "measurements.jsonl",
+  "total_lookups": 1440,
+  "lookup_errors": 0,
+  "write_errors": 0,
+  "summary": [
+    {
+      "scenario": "concrete",
+      "mode": "churn",
+      "concurrency": 4,
+      "variants": {
+        "final": {
+          "repeats": 3,
+          "successful_lookups": 180,
+          "lookup_errors": 0,
+          "successful_writes": 354,
+          "write_errors": 0,
+          "measurements": {
+            "p50_ms": {
+              "median": 4.398208,
+              "min": 3.629083,
+              "max": 5.330875
+            },
+            "p95_ms": {
+              "median": 6.830042,
+              "min": 6.808916,
+              "max": 10.126125
+            },
+            "requests_per_second": {
+              "median": 10.16255794801695,
+              "min": 10.132480423552597,
+              "max": 10.164922263651103
+            },
+            "server_allocated_bytes_per_lookup": {
+              "median": 1218588.8,
+              "min": 1217217.7333333334,
+              "max": 1224960.2666666666
+            },
+            "server_cpu_ms_per_lookup": {
+              "median": 9.573566666666666,
+              "min": 8.116616666666667,
+              "max": 10.50605
+            },
+            "dispatch_cache_hit_percent": {
+              "median": 0.5617977528089888,
+              "min": 0.5617977528089888,
+              "max": 0.5617977528089888
+            }
+          }
+        },
+        "upstream": {
+          "repeats": 3,
+          "successful_lookups": 180,
+          "lookup_errors": 0,
+          "successful_writes": 354,
+          "write_errors": 0,
+          "measurements": {
+            "p50_ms": {
+              "median": 4.711625,
+              "min": 3.123041,
+              "max": 5.165125
+            },
+            "p95_ms": {
+              "median": 6.738125,
+              "min": 5.916208,
+              "max": 9.641417
+            },
+            "requests_per_second": {
+              "median": 10.161341784860006,
+              "min": 10.15914218687623,
+              "max": 10.165068643755577
+            },
+            "server_allocated_bytes_per_lookup": {
+              "median": 1243773.8666666667,
+              "min": 1243327.3333333333,
+              "max": 1262790.6666666667
+            },
+            "server_cpu_ms_per_lookup": {
+              "median": 8.9304,
+              "min": 6.986316666666666,
+              "max": 10.640500000000001
+            },
+            "dispatch_cache_hit_percent": {
+              "median": 0.5617977528089888,
+              "min": 0.5617977528089888,
+              "max": 0.5617977528089888
+            }
+          }
+        }
+      }
+    },
+    {
+      "scenario": "direct5000",
+      "mode": "churn",
+      "concurrency": 4,
+      "variants": {
+        "final": {
+          "repeats": 3,
+          "successful_lookups": 180,
+          "lookup_errors": 0,
+          "successful_writes": 354,
+          "write_errors": 0,
+          "measurements": {
+            "p50_ms": {
+              "median": 7.806583,
+              "min": 5.536333,
+              "max": 9.781043
+            },
+            "p95_ms": {
+              "median": 11.429708,
+              "min": 9.693209,
+              "max": 13.603584
+            },
+            "requests_per_second": {
+              "median": 10.154539539081526,
+              "min": 10.150432368240091,
+              "max": 10.160315238438221
+            },
+            "server_allocated_bytes_per_lookup": {
+              "median": 3629179.2,
+              "min": 3607937.6,
+              "max": 3658215.2
+            },
+            "server_cpu_ms_per_lookup": {
+              "median": 11.510716666666667,
+              "min": 8.394783333333333,
+              "max": 13.303499999999998
+            },
+            "dispatch_cache_hit_percent": {
+              "median": 0.5617977528089888,
+              "min": 0.5617977528089888,
+              "max": 0.5617977528089888
+            }
+          }
+        },
+        "first": {
+          "repeats": 3,
+          "successful_lookups": 180,
+          "lookup_errors": 0,
+          "successful_writes": 354,
+          "write_errors": 0,
+          "measurements": {
+            "p50_ms": {
+              "median": 7.657625,
+              "min": 5.815166,
+              "max": 9.386125
+            },
+            "p95_ms": {
+              "median": 12.487374,
+              "min": 11.720626,
+              "max": 14.587583
+            },
+            "requests_per_second": {
+              "median": 10.15320982094603,
+              "min": 10.152008847345764,
+              "max": 10.155309807401586
+            },
+            "server_allocated_bytes_per_lookup": {
+              "median": 3874720.533333333,
+              "min": 3866893.2,
+              "max": 3912395.466666667
+            },
+            "server_cpu_ms_per_lookup": {
+              "median": 10.615483333333335,
+              "min": 9.004166666666665,
+              "max": 12.336583333333333
+            },
+            "dispatch_cache_hit_percent": {
+              "median": 0.5617977528089888,
+              "min": 0.5617977528089888,
+              "max": 0.5617977528089888
+            }
+          }
+        },
+        "upstream": {
+          "repeats": 3,
+          "successful_lookups": 180,
+          "lookup_errors": 0,
+          "successful_writes": 357,
+          "write_errors": 0,
+          "measurements": {
+            "p50_ms": {
+              "median": 69.282167,
+              "min": 69.13375,
+              "max": 69.705959
+            },
+            "p95_ms": {
+              "median": 88.732375,
+              "min": 75.509458,
+              "max": 92.9945
+            },
+            "requests_per_second": {
+              "median": 10.048661409925385,
+              "min": 10.037484216940621,
+              "max": 10.05402684818348
+            },
+            "server_allocated_bytes_per_lookup": {
+              "median": 111455964.26666667,
+              "min": 111455617.73333333,
+              "max": 111466192.66666667
+            },
+            "server_cpu_ms_per_lookup": {
+              "median": 96.83186666666666,
+              "min": 96.39201666666668,
+              "max": 97.95823333333334
+            },
+            "dispatch_cache_hit_percent": {
+              "median": 0.5617977528089888,
+              "min": 0.5617977528089888,
+              "max": 0.5617977528089888
+            }
+          }
+        }
+      }
+    },
+    {
+      "scenario": "direct5000",
+      "mode": "snapshot",
+      "concurrency": 4,
+      "variants": {
+        "final": {
+          "repeats": 3,
+          "successful_lookups": 180,
+          "lookup_errors": 0,
+          "successful_writes": 0,
+          "write_errors": 0,
+          "measurements": {
+            "p50_ms": {
+              "median": 5.455875,
+              "min": 5.090583,
+              "max": 5.793334
+            },
+            "p95_ms": {
+              "median": 7.252042,
+              "min": 6.588583,
+              "max": 7.597708
+            },
+            "requests_per_second": {
+              "median": 10.159769213486642,
+              "min": 10.1585041991976,
+              "max": 10.159925767613197
+            },
+            "server_allocated_bytes_per_lookup": {
+              "median": 1350036.9333333333,
+              "min": 1324367.0666666667,
+              "max": 1368834.2666666666
+            },
+            "server_cpu_ms_per_lookup": {
+              "median": 3.674066666666667,
+              "min": 3.271900000000001,
+              "max": 3.804483333333333
+            },
+            "dispatch_cache_hit_percent": {
+              "median": 100.0,
+              "min": 100.0,
+              "max": 100.0
+            }
+          }
+        },
+        "first": {
+          "repeats": 3,
+          "successful_lookups": 180,
+          "lookup_errors": 0,
+          "successful_writes": 0,
+          "write_errors": 0,
+          "measurements": {
+            "p50_ms": {
+              "median": 5.780208,
+              "min": 5.56725,
+              "max": 5.790917
+            },
+            "p95_ms": {
+              "median": 8.051125,
+              "min": 7.634709,
+              "max": 11.862874
+            },
+            "requests_per_second": {
+              "median": 10.160655772665903,
+              "min": 10.159067146490267,
+              "max": 10.161644023595253
+            },
+            "server_allocated_bytes_per_lookup": {
+              "median": 1291058.0,
+              "min": 1281323.2,
+              "max": 1308068.0
+            },
+            "server_cpu_ms_per_lookup": {
+              "median": 3.8338333333333328,
+              "min": 3.8176666666666663,
+              "max": 3.8867999999999996
+            },
+            "dispatch_cache_hit_percent": {
+              "median": 100.0,
+              "min": 100.0,
+              "max": 100.0
+            }
+          }
+        },
+        "upstream": {
+          "repeats": 3,
+          "successful_lookups": 180,
+          "lookup_errors": 0,
+          "successful_writes": 0,
+          "write_errors": 0,
+          "measurements": {
+            "p50_ms": {
+              "median": 4.897667,
+              "min": 4.89425,
+              "max": 5.57725
+            },
+            "p95_ms": {
+              "median": 7.090251,
+              "min": 6.526417,
+              "max": 8.93
+            },
+            "requests_per_second": {
+              "median": 10.158591773125607,
+              "min": 10.15403165425748,
+              "max": 10.16233898876486
+            },
+            "server_allocated_bytes_per_lookup": {
+              "median": 1351050.9333333333,
+              "min": 1338562.5333333334,
+              "max": 1361803.2
+            },
+            "server_cpu_ms_per_lookup": {
+              "median": 3.4389,
+              "min": 3.2457833333333337,
+              "max": 3.465866666666669
+            },
+            "dispatch_cache_hit_percent": {
+              "median": 100.0,
+              "min": 100.0,
+              "max": 100.0
+            }
+          }
+        }
+      }
+    }
+  ]
+}
