@@ -2,7 +2,6 @@ package datasets
 
 import (
 	"maps"
-	"slices"
 
 	"github.com/authzed/spicedb/internal/caveats"
 	core "github.com/authzed/spicedb/pkg/proto/core/v1"
@@ -144,18 +143,17 @@ func (bss BaseSubjectSet[T]) Subtract(toRemove T) {
 // SubtractAll subtracts the other set of subjects from this set of subtracts, modifying this
 // set *in place*.
 func (bss BaseSubjectSet[T]) SubtractAll(other BaseSubjectSet[T]) {
-	subjects := other.AsSlice()
 	wildcard, hasWildcard := bss.wildcard.get()
-	if !hasWildcard || other.wildcard.getOrNil() != nil || len(subjects) < 2 {
-		for _, subject := range subjects {
+	if !hasWildcard || other.wildcard.getOrNil() != nil || len(other.concrete) < 2 {
+		for _, subject := range other.AsSlice() {
 			bss.Subtract(subject)
 		}
 		return
 	}
 	// Build the exclusions once instead of copying the growing slice for each subject.
 	existingExclusions := wildcard.GetExcludedSubjects()
-	exclusions := make([]T, 0, len(existingExclusions)+len(subjects))
-	matched := make(map[string]struct{}, len(existingExclusions))
+	exclusions := make([]T, 0, len(existingExclusions)+len(other.concrete))
+	matched := make(map[string]struct{}, min(len(existingExclusions), len(other.concrete)))
 	for _, exclusion := range existingExclusions {
 		if removing, ok := other.concrete[exclusion.GetSubjectId()]; ok {
 			matched[exclusion.GetSubjectId()] = struct{}{}
@@ -163,12 +161,12 @@ func (bss BaseSubjectSet[T]) SubtractAll(other BaseSubjectSet[T]) {
 		}
 		exclusions = append(exclusions, exclusion)
 	}
-	for _, removing := range subjects {
-		if _, ok := matched[removing.GetSubjectId()]; !ok {
+	for subjectID, removing := range other.concrete {
+		if _, ok := matched[subjectID]; !ok {
 			exclusions = append(exclusions, removing)
 		}
-		if existing, ok := bss.concrete[removing.GetSubjectId()]; ok {
-			bss.setConcrete(removing.GetSubjectId(), subtractConcreteFromConcrete(existing, removing, bss.constructor))
+		if existing, ok := bss.concrete[subjectID]; ok {
+			bss.setConcrete(subjectID, subtractConcreteFromConcrete(existing, removing, bss.constructor))
 		}
 	}
 	updated := bss.constructor(tuple.PublicWildcard, wildcard.GetCaveatExpression(), exclusions, wildcard)
@@ -283,8 +281,19 @@ func (bss BaseSubjectSet[T]) IsEmpty() bool {
 
 // AsSlice returns the contents of the subject set as a slice of found subjects.
 func (bss BaseSubjectSet[T]) AsSlice() []T {
-	values := slices.Collect(maps.Values(bss.concrete))
-	if wildcard, ok := bss.wildcard.get(); ok {
+	wildcard, hasWildcard := bss.wildcard.get()
+	count := len(bss.concrete)
+	if hasWildcard {
+		count++
+	}
+	if count == 0 {
+		return nil
+	}
+	values := make([]T, 0, count)
+	for _, concrete := range bss.concrete {
+		values = append(values, concrete)
+	}
+	if hasWildcard {
 		values = append(values, wildcard)
 	}
 	return values

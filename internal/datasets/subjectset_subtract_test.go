@@ -63,3 +63,33 @@ func cloneSubjects(subjects []*v1.FoundSubject) []*v1.FoundSubject {
 	}
 	return cloned
 }
+
+func BenchmarkSubjectSetSubtractAll(b *testing.B) {
+	for _, tc := range []struct {
+		name                                string
+		existingCount, removalCount, offset int
+	}{
+		{"wildcard/5000", 0, 5000, 0},
+		{"existing5000/disjoint10", 5000, 10, 5000},
+		{"existing5000/overlap10", 5000, 10, 0},
+		{"existing5000/overlap5000", 5000, 5000, 0},
+	} {
+		b.Run(tc.name, func(b *testing.B) {
+			excluded := make([]string, tc.existingCount)
+			for i := range excluded {
+				excluded[i] = fmt.Sprintf("u%d", i)
+			}
+			wildcard := wc(excluded...)
+			removing := NewSubjectSet()
+			for i := range tc.removalCount {
+				removing.MustAdd(sub(fmt.Sprintf("u%d", tc.offset+i)))
+			}
+			b.ReportAllocs()
+			for b.Loop() {
+				set := NewSubjectSet()
+				set.MustAdd(wildcard)
+				set.SubtractAll(removing)
+			}
+		})
+	}
+}
